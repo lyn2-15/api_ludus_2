@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ludus_api_v2
+    environment:
+      APP_ENV: development
+      DATABASE_PATH: /data/ludusacademia.db
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      ALLOWED_ORIGINS: "http://localhost:3000"
+      MAX_SYNC_PAYLOAD_KB: 50
+      INVITE_CODE_EXPIRY_HOURS: 24
+    ports:
+      - "8000:8000"
+    volumes:
+      - sqlite_data:/data
+      - ./app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  sqlite_data:
+    driver: local
