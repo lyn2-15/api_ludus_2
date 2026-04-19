@@ -10,7 +10,7 @@ aiosqlite==0.20.0
 
 # Auth (validación del JWT de Supabase)
 python-jose[cryptography]==3.3.0
-httpx==0.27.0
+httpx>=0.27.0
 
 # PDF
 reportlab==4.2.2
