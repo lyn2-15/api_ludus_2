@@ -2,6 +2,7 @@
 app/main.py — LudusAcademia+ v2.1
 Stack: FastAPI + SQLite3 (aiosqlite) + Supabase Auth
 """
+import re
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
@@ -31,8 +32,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+def is_allowed_origin(origin: str) -> bool:
+    static = set(settings.ALLOWED_ORIGINS)
+    if origin in static:
+        return True
+    # Permite cualquier subdominio de Codespaces y localhost
+    return bool(re.match(r"https://[a-z0-9\-]+-\d+\.app\.github\.dev$", origin))
+
 app.add_middleware(
     CORSMiddleware,
+    allow_origin_regex=r"https://[a-zA-Z0-9\-]+-\d+\.app\.github\.dev$",
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST"],
